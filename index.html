@@ -1,0 +1,271 @@
+<!DOCTYPE html>	
+<!--<html>-->
+<!--<html manifest="container.manifest">-->
+<html lang="en">
+    
+    <head>
+        
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+        <meta name="viewport" content="width=device-width">  
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+        <meta http-equiv="Content-type" content="text/html; charset=utf-8">  
+        <meta name="format-detection" content="telephone=no">
+        <title>GyanSys</title> 
+        <link rel="shortcut icon" href="images/favicon.ico" />
+        <link rel="icon" type="image/png" href="images/favicon.png" />
+
+        <!--[if IE]>
+        <link href="stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+        <![endif]-->    
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/jquery-1.8.2.min.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/json-minified.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/plugins.js"></script>
+        
+        <link id="loginCSS" href="stylesheets/login.css" media="screen, projection" rel="stylesheet" type="text/css" />
+        <link href="stylesheets/screenC.css" media="screen, projection" rel="stylesheet" type="text/css"/>
+        <!--        <script type="text/javascript" charset="utf-8" src="js/gulfmark/Controller.js"></script>
+                <script type="text/javascript" charset="utf-8" src="js/gulfmark/Constants.js"></script>-->
+        <script>
+                var username = "";
+                var password = "";
+            //var loginurl="http://50.194.79.186:8080/sap/inv/opu/odata/sap/Z_INTERNAL_APPS_SRV/z_check_user/?$filter=Username eq '"+username+"' and Password eq '"+password+"'";
+            var podetailsurl="http://50.194.79.186:8080/POApprovalApp/PODetail.html";
+             $(document).ready(function(){
+//               $( "#username" ).focus(function() {
+localStorage.setItem("view", "inbox");
+                   var valueusername = $('#username').val();
+                   if(valueusername!==""){
+  $(".error-msg").text("");
+                   }
+//});
+//$( "#password" ).focus(function() {
+                   var valuepwd = $('#password').val();
+                   if(valuepwd!==""){
+  $(".error-msg").text("");
+                   }
+});
+//            });
+            function login()
+            {
+             usernamecase = $('#username').val();
+                username = usernamecase.toUpperCase();
+                password = $('#password').val();
+                if (username === "" & password === "")
+                {
+                    $(".error-msg").text("Please enter Username and Password.");
+                }
+                else if (username === "") {
+                    //alert("Please enter username");
+                    //createAlertMessage("Alert", "username" , "alert", "e");
+                    $(".error-msg").text("Please enter Username.");
+                    $('#username').focus();
+                }
+                else if (password === "")
+                {
+                    //createAlertMessage("Alert", "Please enter password" , "alert", "e");
+                    $(".error-msg").text("Please enter Password.");
+                    $('#password').focus();
+                }
+                else if (username !== "" && password !== "") {
+                    //call login uri
+                    //alert(username +"---"+password)
+                    userAuthentication(username, password);
+                }
+//                else if(password !=="12345") 
+//                {
+//                    //createAlertMessage("Alert", "Please enter password" , "alert", "e");
+//                    $(".error-msg").text("Please enter Correct Password.");
+//                    $('#password').focus();
+//                }
+//                else {
+//        				localStorage.setItem("username", username);	
+//        				window.location = "POListView.html";
+//        			} 
+            }
+
+      
+            
+            
+function userAuthentication(username, password) {
+
+var xml;
+$.ajax(
+    {
+        url : "http://50.194.79.186:8000/sap/opu/odata/sap/Z_INTERNAL_APPS_SRV/z_check_user/?$filter=Username eq '"+username+"' and Password eq '"+password+"'",
+        type: 'GET',
+        contentType: "application/xml;charset=utf-8",
+        dataType: "",
+        cache: false,
+        success: function (data) {
+            $(data).find("content").each(function () {
+                $(this).find("m\\:properties, properties").each(function () {
+                    var $info = $(this);
+                    var type = $info.find("d\\:type, type").text();
+                    if(type==="E")
+                        {
+                            //$(".error-msg").text("Authentication Failed.");
+                            createAlertMessage("Error","Please enter correct username and password" ,"alert","e");
+//                            $('#username').val('');
+//                            $('#password').val('');
+//                            $('#username').focus();
+                        }
+                        else if(type==="S")
+                        {
+                              localStorage.setItem("username", username);
+                              window.location = "POListView.html";
+                        }
+                });
+            });
+
+        },
+        error: function (XMLHttpRequest, textStatus, errorThrown) {
+            //createAlertMessage("Alert", "Error" , "alert", "e");
+        }
+    });
+}
+  
+            createAlertMessage = function(header, message, type, e) {
+                $(".model-screen").css("display", "block");
+                $("#header").text(header);
+                $("#alertMessage").text(message);
+                if (message.length > 40) {
+                    $(".model-container").height("118px");
+                } else {
+                    $(".model-container").removeAttr('style');
+                }
+                if (type === "alert") {
+                    $("#ok").val('OK');
+                    $("#cancelAlert").css("display", "none");
+                    $("#ok").click(function() {
+                        $(".model-screen").css("display", "none");
+                        $('#username').val('');
+                        $('#password').val('');
+                        $('#username').focus();
+                        $(".error-msg").text("");
+                        //$('#erromsgid').val('');
+                    });
+
+                }
+
+                else if (type === "confirm") {
+                    $("#ok").val('OK');
+                    $("#cancelAlert").val('Cancel');
+                    $("#cancelAlert").css("display", "inline-block");
+                    $("#ok").click(function() {
+                        location.href = podetailsurl;
+                    });
+                    $("#cancelAlert").click(function() {
+                        if (id === "logOut")
+                        {
+                            location.href = podetailsurl;
+                        }
+                        else
+                        {
+                            location.href = podetailsurl;
+                        }
+                    });
+                } else if (type === "continue") {
+                    $("#ok").val('OK');
+                    $("#cancelAlert").val('Cancel');
+                    $("#cancelAlert").css("display", "inline-block");
+                }
+                else if (type === "stay") {
+                    $("#ok").val('OK');
+                    $("#cancelAlert").val('Cancel');
+                    $("#cancelAlert").css("display", "inline-block");
+                    $("#ok").click(function() {
+                        location.href = podetailsurl;
+                    });
+                }
+                else if (type === "Listviewlogout") {
+                    $("#ok").val('OK');
+                    $("#cancelAlert").val('Cancel');
+                    $("#cancelAlert").css("display", "inline-block");
+                    $("#ok").click(function() {
+                        location.href = podetailsurl;
+                    });
+                    $("#cancelAlert").click(function() {
+                        $(".model-screen").css("display", "none");
+                    });
+                }
+            };
+
+        </script>
+        <script type="text/javascript">
+//            if (navigator.userAgent.match("Android")) {
+//                document.write('<script src="js/frameworks/cordova.js"><\/script>')
+//            }
+//            document.write('<link href="stylesheets/fonts.css?r=' + Math.random() + '" rel="stylesheet" type="text/css" />');
+        </script>
+        <style type="text/css">
+            /*            body{
+                            display: none;
+                        }*/
+        </style>
+    </head>
+    <body>
+        <div id="loginOuter" style=""></div>
+        <div id="loginSection" class="login-box" style="">
+
+            <h1 class="logo">Gulfmark</h1>
+            <h2 style="
+                color: #32393f;
+                text-align: center;
+                margin: 21px 0 37px;font-size: larger;font-weight: bold;">Welcome to Gyansys Connect</h2>
+            <fieldset class="user-field-container"><input id="username" type="text" class="input-field user-field" tabindex="1" placeholder="Enter Username" value="PMUDDA"/></fieldset>
+            <fieldset class="password-field-container"><input id="password" type="Password" class="input-field password-field" tabindex="2"  placeholder="Enter Password" value="psm12345" /></fieldset>
+            <fieldset id="erromsgid" class="error-msg"></fieldset>
+<!--            <fieldset class="checkbox-field">
+                <input type="checkbox" tabindex="3" id="remember"  class="regular-checkbox" /><label for="remember">Remember me</label>
+                <a href="#" class="forgot-password">Forgot Password?</a>
+            </fieldset>-->
+            <input id="doLogin" type="submit" class="login-btn" tabindex="4" value="LOGIN" onclick="login()" />
+            <div class="section-loader"></div>
+            <img src="images/section-loader.gif" style="display: none;"/>
+            <div class="model-screen">
+                        <div class="model-container" id="alertbox">
+                            <header><span id="header">Logout</span></header>
+                            <div class="model-body clearfix">
+                                <h5 id="alertMessage">Are you sure you want to logout?</h5>
+                                <input id="ok" type="submit" class="submit-btn" value="OK" />
+                                <input id="cancelAlert" type="submit" class="cancel-btn" value="Cancel" />
+                            </div>
+                        </div>
+                    </div><!-- .model-screen -->
+        </div>
+
+        <section id="appStoreWrapper" class="wrapper" style="display: none;">         
+            <!--            <link id="screenCSS" href="stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css"/>-->
+            <!--            <link id="appstoreCSS" href="stylesheets/invoice-appstore.css" media="screen, projection" rel="stylesheet" type="text/css" />-->
+            <!--            <header class="main-header">
+                            <h1 class="logo">Gulf Mark Offshore</h1>
+                            <a id="logut-btn" href="#login" class="logut-btn">Logout</a>
+                        </header>
+                        <div class="appstore-info info-bar">
+                            <span id="name">Hi, First Name last Name</span>
+                            Welcome to GulfMark App Store
+                        </div>
+                        <div class="appstore-info info-bar" style="padding-left: 65%;">
+                            <span id="name">First Name last Name</span>
+                            Welcome to Gyansys App Store
+                        </div>-->
+            <section class="content-area">
+                <div class="content-container clearfix">
+                    <div class="scrollable-area">
+                        <ul id="appstore-list" class="appstore-list"></ul>
+                        <div class="section-loader"></div>
+                        <img src="images/section-loader.gif" style="display: none;"/>
+                    </div>
+                </div>
+            </section><!-- .content-area -->
+
+        </section><!-- .wraapper -->
+        <script type="text/javascript">
+//            $(document).ready(function(e) {
+//                LoginNamespace.initGulfLogin();
+//            });
+        </script>
+    </body>
+</html>

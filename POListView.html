@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="HandheldFriendly" content="true">
+<!--[if lt IE 9]>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+	<script src="//code.jquery.com/jquery-2.0.3.js"></script>
+<!--<![endif]-->
+        <title>List view</title>
+<!--        [if IE]
+            <link href="stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+        [endif]-->
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/jquery-2.0.3.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/datajs-1.1.1.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/jquery-1.9.1.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/jquery-ui-1.10.3.custom.js"></script>
+        <link href="stylesheets/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+        <script type="text/javascript" charset="utf-8" src="js/gulfmark/Controller.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/json2.js"></script>
+         <link href="stylesheets/invoice-home.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                    <link href="stylesheets/fonts.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                    <link href="stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                   <link href="stylesheets/model.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+                   <link href="stylesheets/invoice-details.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                  <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+                    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+                    
+                    <script>
+                      
+                       $(function() {
+
+                         $( "#welcome" ).append("Welcome "+localStorage.getItem("username")+"!");
+                         });
+                         
+                    </script>
+                    <link href="stylesheets/screenC.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                    <link href="stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                    
+</head>
+    <body class="bodyclass">
+      
+        <div class="section-loader"></div>
+        <img src="images/section-loader.gif" id="section-loader" style="display:none;">
+        
+                <section id="homeWrapper" class="wrapper">
+                    <header class="main-header">
+<!--                    <a href="http://50.194.79.186:8080/POApprovalApp/Login.html" class="appstore-btn">Back</a>-->
+                    <h1 class="logo">Gyansys</h1>
+                    <a id="logOut" href='javascript:createAlertMessage("Logout","Are you sure you want to Logout?","Listviewlogout","e")' class="logut-btn">Logout</a>
+                    <h1 align ="right" id="welcome"></h1>
+                    </header>
+                    <div class="info-bar"  style="text-align: center;">PO Approval</div>
+                    <section class="content-area" >
+                        <div class="content-container clearfix" >
+                            
+<!--                                <ul class="tab-view" style="margin:10px 10px 10px 50px;">-->
+                                 <ul class="tab-view" style="">
+                                    <li id="inboxMainBlock" class="active"><a id="inboxCount" href="javascript:loadPOListviewInbox()">Inbox</a></li>
+                                    <li id="approvedMainBlock"><a href="javascript:loadPOListviewApproved()">Approved</a></li>
+                                    <li id="rejectedMainBlock"><a href="javascript:loadPOListviewRejected()">Rejected</a></li>
+                                </ul>
+
+                                
+                                <div>&nbsp;</div>
+
+                                <table class="main-grid-view"  id ="openpomaintbl">
+                                    <thead>
+                                        <tr id="trtoggle">
+<!--                                            <th class="clikable" style="width:10%; align:centre"><span id="openpochk"></span></th>-->
+                                            <th id="ponumber"><span>PO No</span></th>
+                                            <th><span>Requester</span> </th>
+<!--                                            <th id="openpodate"><span id="invDate">PO Date</span> </th>-->
+                                            <th><span>Type</span> </th>
+                                            <th><span>Description</span> </th>
+                                            <th><span>Cost</span> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="Polistviewtbl"></tbody>
+                               </table>
+
+                        <div id="noItems" style="display: none; padding: 45px 0; text-align: center;">No Items to display</div>        
+                        </div>
+                          
+                                
+<!--                            </div>-->
+                        
+                    </section><!-- .content-area -->
+                    <div class="model-screen">
+                        <div class="model-container" id="alertbox">
+                            <header><span id="header">Logout</span></header>
+                            <div class="model-body clearfix">
+                                <h5 id="alertMessage">Are you sure you want to logout?</h5>
+                                <input id="ok" type="submit" class="submit-btn" value="OK" />
+                                <input id="cancelAlert" type="submit" class="cancel-btn" value="Cancel" />
+                            </div>
+                        </div>
+                    </div><!-- .model-screen -->
+                </section><!-- .wraapper -->
+                <!--<div class="page-overlay"><span>Please <a href="#">Login</a> to view</span></div>-->       
+      
+    </body>
+  
+</html>

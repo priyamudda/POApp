@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+        <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+        <meta name="HandheldFriendly" content="true">
+<!--[if lt IE 9]>
+	<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<![endif]-->
+<!--[if gte IE 9]><!-->
+	<script src="//code.jquery.com/jquery-2.0.3.js"></script>
+<!--<![endif]-->
+        <title>PlantDetails view</title>
+<!--        [if IE]
+            <link href="stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+        [endif]-->
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/jquery-2.0.3.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/datajs-1.1.1.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/jquery-1.9.1.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/jquery-ui-1.10.3.custom.js"></script>
+        <link href="stylesheets/jquery-ui-1.10.3.custom.css" rel="stylesheet" type="text/css" />
+      <script type="text/javascript" charset="utf-8" src="js/gulfmark/Controller.js"></script>
+        <script type="text/javascript" charset="utf-8" src="js/frameworks/json2.js"></script>
+         <link href="stylesheets/invoice-home.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                    <link href="stylesheets/fonts.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                    <link href="stylesheets/ie.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                   <link href="stylesheets/model.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+                   <link href="stylesheets/invoice-details.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                  <script src="//code.jquery.com/jquery-1.9.1.js"></script>
+                    <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+                    
+                    <script>
+        $(window).load(function() {
+        Reset();
+    });                
+                        var werks = localStorage.getItem("werks");
+                        
+	var xml;
+	$.ajax({
+   	     
+	    url: "http://50.194.79.186:8000/sap/opu/odata/sap/Z_INTERNAL_APPS_SRV/zpo_add_details/?$filter=plant eq '"+werks+"'",
+		type: 'GET',
+	       contentType: "application/xml; charset=utf-8",
+	       dataType: "",
+	       //async:false, ->multiple web service
+	       cache:"false",
+	        success: function (data) {
+	        $(data).find("content").each(function () {  
+			$(this).find("properties").each(function(){
+    		var $info = $(this);
+     		var region = $info.find('Region').text();
+     		var post_code1 = $info.find('PostCode1').text();
+     		var tel_number = $info.find('TelNumbe').text();
+     		var country = $info.find('Country').text();
+   			var werks = $info.find('Werks').text();
+   			var street = $info.find('Street').text();
+   			
+    		if(werks == werks) {
+    		$("#regionpoplantdtls").html(region);
+//        	$("#PostCode").html(post_code1);
+//        	$("#TelNumber").html(tel_number);
+        	$("#streetpoplantdtls").html(street);
+        	$("#plantpoplantdtls").html(werks);
+        	$("#countrypoplantdtls").html(country);
+//        	$("#Street").html(street);
+        	        	}
+	                	
+	               });
+	            });
+	        }, 
+	        error: function (XMLHttpRequest, textStatus, errorThrown) {
+	            createAlertMessage("Alert", "Error", "alert", "e");
+	        }
+	    });
+
+
+createAlertMessage = function(header, message, type, e) {
+   $(".model-screen").css("display", "block");
+   $("#header").text(header);
+   $("#alertMessage").text(message);
+    if (message.length > 40) {
+        $(".model-container").height("118px");
+    } else {
+        $(".model-container").removeAttr('style');
+    }
+    if (type === "alert") {
+        $("#ok").val('OK');
+        $("#cancelAlert").css("display", "none");
+        $("#ok").click(function() {
+     //   location.href = "https://192.168.2.119:8080/GoodsReceipt-1.0/GROpenPO.html";
+     
+      	$(".model-screen").css("display", "none");
+		        	 		
+        });
+        
+    } 
+    
+    else if (type === "confirm") {
+        $("#ok").val('OK');
+        $("#cancelAlert").val('Cancel');
+        $("#cancelAlert").css("display", "inline-block");
+        $("#ok").click(function() {
+        location.href = "http://50.194.79.186:8080/POApprovalApp/PODetail.html";
+        });
+        $("#cancelAlert").click(function() {
+            $(".model-screen").css("display", "none");
+                });
+    } else if (type === "continue") {
+        $("#ok").val('OK');
+        $("#cancelAlert").val('Cancel');
+        $("#cancelAlert").css("display", "inline-block");
+    }
+      else if (type === "stay") {
+        $("#ok").val('OK');
+        $("#cancelAlert").val('Cancel');
+        $("#cancelAlert").css("display", "inline-block");
+        $("#ok").click(function() {
+        location.href = "http://50.194.79.186:8080/POApprovalApp/PODetail.html";
+        });
+    }
+    else if (type === "Poplantdetailslogout") {
+        $("#ok").val('OK');
+        $("#cancelAlert").val('Cancel');
+        $("#cancelAlert").css("display", "inline-block");
+        $("#ok").click(function() {
+        location.href = "http://50.194.79.186:8080/POApprovalApp/Login.html";
+        });
+        $("#cancelAlert").click(function() {
+            $(".model-screen").css("display", "none");
+                 //location.href = "http://50.194.79.186:8080/POApprovalUpdated-1.0/PODetail.html";
+                  
+                });
+    }
+};
+
+                      
+//                       $(function() {
+//                         $( "#receiptDate" ).datepicker();
+//                         $( "#format" ).change(function() {
+//                         });
+//                         });
+                         
+                    </script>
+                    <link href="stylesheets/screenC.css" media="screen, projection" rel="stylesheet" type="text/css" />
+                    
+</head>
+    <body class="bodyclass">
+      
+        <div class="section-loader"></div>
+        <img src="images/section-loader.gif" id="section-loader" style="display:none;"/>
+        
+                <section id="homeWrapper" class="wrapper">
+                    <header class="main-header">
+                    <a href="http://50.194.79.186:8080/POApprovalApp/PODetail.html" class="appstore-btn">Back</a>
+                    <h1 class="logo">Gulf Mark Offshore</h1>
+                    <a id="logOut" href='javascript:createAlertMessage("Logout","Are you sure you want to Logout?","Poplantdetailslogout","e")' class="logut-btn">Logout</a>
+                    
+                    </header>
+                    <div class="info-bar"  style="text-align: center;">POApproval-PlantDetails</div>
+                    <section class="content-area" style="">
+                        <div class="content-container clearfix" style="overflow-y: scroll;">
+                            <div class="scrollable-area" id="maindiv" style="height: initial;">
+<!--			            <table class="invoice-table">
+                                        <tr>
+                                            <th>Receipt Date</th>
+                                            <td class="seperator">:</td>
+                                            <td id="invoiceNo"><input style="box-sizing: border-box;border: solid 1px rgba(0,0,0,0.14);border-radius: 4px;font: 1em Arial, Helvetica, sans-serif;font-size: 80%;width: 155px;" type="date" id="receiptDate" /></td> 
+                                         <td id="invoiceNo"><p><input style="box-sizing: border-box;border: solid 1px rgba(0,0,0,0.14);border-radius: 2px;font: 1em Arial, Helvetica, sans-serif;font-size: 80%;width: 155px;" type="text" id="receiptDate"></p></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Receiver ID</th>
+                                            <td class="seperator">:</td>
+                                            <td id="invoiceDate"><input style="box-sizing: border-box;border: solid 1px rgba(0,0,0,0.14);border-radius: 4px;font: 1em Arial, Helvetica, sans-serif;font-size: 80%;width: 155px;" type="text" name="receiverid" id="receiverid"></td>                                        </tr>
+                                    </table>-->
+                                
+                                <div>&nbsp;</div>
+<!--                                <div style="padding-bottom: 2%;">
+                                    <button id="openporeceived" class="btnreceived" onclick="ExpandAll()" style="cursor:pointer;margin-right: 2%;background-color: #2f66b1;color: #fff;border: solid 1px #1c60ba;border-radius: 3px;font-size: 1.025em;font-weight: bold;background-image: -webkit-linear-gradient(bottom, #2f66b1 50%,#4378ba 50%,#6796ca);text-align: center;">Expand All</button>
+                                    <button id="openporeset" class="btnreset" onclick="CollapseAll()" style="cursor:pointer;background-color: #2f66b1;color: #fff;border: solid 1px #1c60ba;border-radius: 3px;font-size: 1.025em;font-weight: bold;background-image: -webkit-linear-gradient(bottom, #2f66b1 50%,#4378ba 50%,#6796ca);text-align: center;">Collapse All</button>
+                                    <input id="hide" type="button" value="Hide 3rd Column"/>
+                                </div>-->
+
+
+<table class="invoice-table">
+<!--                                        <tr>
+                                            <th>PO NO #</th>
+                                            <td>:</td>
+                                            <td></td>
+                                        </tr>-->
+                                        <tr>
+                                            <th>Plant</th>
+                                            <td class="seperator">:</td>
+                                            <td id="plantpoplantdtls"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Region</th>
+                                            <td class="seperator">:</td>
+                                            <td id="regionpoplantdtls"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Street</th>
+                                            <td class="seperator">:</td>
+                                            <td id="streetpoplantdtls"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Country</th>
+                                            <td class="seperator">:</td>
+                                            <td id="countrypoplantdtls"></td>
+                                        </tr>
+<!--                                        <tr>
+                                            <th>Requester</th>
+                                            <td class="seperator">:</td>
+                                            <td id="requesterpodetail"><a href="javascript:showRequestorDetails()"></a></td>
+                                        </tr>-->
+<!--                                        <tr>
+                                            <th>SAP Document #</th>
+                                            <td class="seperator">:</td>
+                                            <td id="sapDocNo"></td>
+                                        </tr>-->
+                                         <tbody>
+                                    </tbody>
+                                    </table>
+<!--                                <table style="width: 100%;
+padding: 24px;
+display: table;
+border-collapse: separate;
+border-spacing: 2px;
+border-color: gray;" data-role="table" id="table-column-toggle" data-mode="columntoggle" class="ui-body-d ui-shadow table-stripe ui-responsive" data-column-btn-theme="b" data-column-btn-text="Columns to display..." data-column-popup-theme="a" >
+      <thead>
+        <tr class="ui-bar-d">
+         <th class="PoplantdetailsTH" id="font">Plant</th><td class="PoplantdetailsTH"><label id="Plant">-</label></td>
+        </tr>
+        <tr class="ui-bar-d">
+         <th class="PoplantdetailsTH" id="font">Region</th><td class="PoplantdetailsTH"><label id="Region">-</label></td>
+        </tr>
+        <tr class="ui-bar-d">
+         <th class="PoplantdetailsTH" id="font">Street</th><td class="PoplantdetailsTH"><label id="Street">-</label></td>
+        </tr>
+        <tr class="ui-bar-d">
+         <th class="PoplantdetailsTH" id="font">Country</th><td class="PoplantdetailsTH"><label id="Country">-</label></td>
+        </tr>
+          
+      </thead>
+      <tbody>
+      </tbody>
+    </table>-->
+<!--                                <table class="main-grid-view" style="" id ="openpomaintbl">
+                                    <thead>
+                                        <tr id="trtoggle">
+                                            <th class="clikable" style="width:10%; align:centre"><span id="openpochk"></span></th>
+                                            <th id="ponumber"><span>Purchase Order No</span></th>
+                                            <th><span>Requester name</span> </th>
+                                            <th id="openpodate"><span id="invDate">PO Date</span> </th>
+                                            <th><span>Type</span> </th>
+                                            <th><span>Description</span> </th>
+                                            <th><span>Cost</span> </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="GROpenPOprttbl"></tbody>
+                               </table>-->
+<!--                                 <div style="text-align:center;padding-top: 1%;">
+                                    <button id="openporeceived" onclick="OpenPoConfirmation()" class="btnreceived" style="cursor:pointer;margin-right: 2%;background-color: #2f66b1;color: #fff;border: solid 1px #1c60ba;border-radius: 3px;font-size: 1.025em;font-weight: bold;background-image: -webkit-linear-gradient(bottom, #2f66b1 50%,#4378ba 50%,#6796ca);text-align: center;">Receive</button>
+                                    <button id="openporeset" onclick="ResetValues()" class="btnreceived" style="cursor:pointer;background-color: #2f66b1;color: #fff;border: solid 1px #1c60ba;border-radius: 3px;font-size: 1.025em;font-weight: bold;background-image: -webkit-linear-gradient(bottom, #2f66b1 50%,#4378ba 50%,#6796ca);text-align: center;">Reset</button>
+                                </div> -->
+                                </div>
+                          
+                                <div id="noItems" style="display: none; padding: 45px 0; text-align: center;">No Items to display</div>
+                            </div>
+                        </div>
+                    </section><!-- .content-area -->
+                    <div class="model-screen">
+                        <div class="model-container" id="alertbox">
+                            <header><span id="header">Logout</span></header>
+                            <div class="model-body clearfix">
+                                <h5 id="alertMessage">Are you sure you want to logout?</h5>
+                                <input id="ok" type="submit" class="submit-btn" value="OK" />
+                                <input id="cancelAlert" type="submit" class="cancel-btn" value="Cancel" />
+                            </div>
+                        </div>
+                    </div><!-- .model-screen -->
+                </section><!-- .wraapper -->
+                <!--<div class="page-overlay"><span>Please <a href="#">Login</a> to view</span></div>-->       
+      
+    </body>
+  
+</html>
